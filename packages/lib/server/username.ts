@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import type { NextResponse } from "next/server";
 
 import slugify from "@calcom/lib/slugify";
@@ -56,7 +57,8 @@ export const generateUsernameSuggestion = async (users: string[], username: stri
   const limit = username.length < 2 ? 9999 : 999;
   let rand = 1;
   while (users.includes(username + String(rand).padStart(4 - rand.toString().length, "0"))) {
-    rand = Math.ceil(1 + Math.random() * (limit - 1));
+    const randomValue = randomBytes(2).readUInt16BE(0) / 65535;
+    rand = Math.ceil(1 + randomValue * (limit - 1));
   }
   return username + String(rand).padStart(4 - rand.toString().length, "0");
 };

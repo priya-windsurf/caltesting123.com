@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import detect from "detect-port";
 import type { Server } from "http";
 import { createServer } from "http";
@@ -18,7 +19,8 @@ export const nextServer = async ({ port = 3000 } = { port: 3000 }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   const dev = process.env.E2E_DEV_SERVER === "1" ? true : false;
   if (dev) {
-    port = await detect(Math.round((1 + Math.random()) * 3000));
+    const randomValue = randomBytes(2).readUInt16BE(0) / 65535;
+    port = await detect(Math.round((1 + randomValue) * 3000));
   }
   process.env.PLAYWRIGHT_TEST_BASE_URL =
     process.env.NEXT_PUBLIC_WEBAPP_URL =

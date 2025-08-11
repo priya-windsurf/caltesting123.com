@@ -2,7 +2,10 @@ import { createHmac } from "crypto";
 
 // 262992 minutes is 6 months
 export function generateVideoToken(recordingId: string, expiresInMinutes = 262992) {
-  const secret = process.env.CAL_VIDEO_RECORDING_TOKEN_SECRET || "default-secret-change-me";
+  const secret = process.env.CAL_VIDEO_RECORDING_TOKEN_SECRET;
+  if (!secret) {
+    throw new Error("CAL_VIDEO_RECORDING_TOKEN_SECRET environment variable is required");
+  }
   const expires = Date.now() + expiresInMinutes * 60 * 1000;
 
   const payload = `${recordingId}:${expires}`;
@@ -14,7 +17,10 @@ export function generateVideoToken(recordingId: string, expiresInMinutes = 26299
 export function verifyVideoToken(token: string): { valid: boolean; recordingId?: string } {
   try {
     const [recordingId, expires, receivedHmac] = token.split(":");
-    const secret = process.env.CAL_VIDEO_RECORDING_TOKEN_SECRET || "default-secret-change-me";
+    const secret = process.env.CAL_VIDEO_RECORDING_TOKEN_SECRET;
+    if (!secret) {
+      throw new Error("CAL_VIDEO_RECORDING_TOKEN_SECRET environment variable is required");
+    }
 
     if (Date.now() > parseInt(expires)) {
       return { valid: false };
