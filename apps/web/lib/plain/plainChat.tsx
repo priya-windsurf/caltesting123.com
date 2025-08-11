@@ -278,7 +278,9 @@ const PlainChat = IS_PLAIN_CHAT_ENABLED
         window.plainScriptLoaded = function() {
           if (window.Plain && ${Boolean(config)}) {
             try {
-              Plain.init(${config ? JSON.stringify(config) : null});
+              Plain.init(${
+                config ? JSON.stringify(config).replace(/</g, "\\u003c").replace(/>/g, "\\u003e") : null
+              });
             } catch (error) {
               console.error("Failed to initialize Plain:", error);
             }
