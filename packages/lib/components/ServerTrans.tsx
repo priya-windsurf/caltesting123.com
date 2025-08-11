@@ -1,4 +1,3 @@
-import { randomBytes } from "crypto";
 import type { TFunction } from "i18next";
 import type { ReactNode, ReactElement, FC } from "react";
 import React, { isValidElement, Fragment, createElement, cloneElement } from "react";
@@ -202,7 +201,7 @@ const parseObjectComponents = (content: string, components: Record<string, React
   Object.keys(components).forEach((tag) => {
     const interpolationRegex = new RegExp(`{{\\s*${tag}\\s*}}`, "g");
     processedContent = processedContent.replace(interpolationRegex, (match) => {
-      const placeholder = `__INTERP_${tag}_${randomBytes(4).toString("hex")}__`;
+      const placeholder = `__INTERP_${tag}_${Math.random().toString(36).substring(2)}__`;
 
       if (isValidElement(components[tag])) {
         placeholders[placeholder] = cloneElement(components[tag], {
@@ -220,7 +219,7 @@ const parseObjectComponents = (content: string, components: Record<string, React
     const tagRegex = new RegExp(`<${tag}>(.*?)<\\/${tag}>`, "gs");
 
     processedContent = processedContent.replace(tagRegex, (match, content) => {
-      const placeholder = `__TAG_${tag}_${randomBytes(4).toString("hex")}__`;
+      const placeholder = `__TAG_${tag}_${Math.random().toString(36).substring(2)}__`;
 
       if (isValidElement(components[tag])) {
         // Process any HTML in the content
@@ -311,7 +310,7 @@ const parseHtmlTags = (content: string): ReactNode[] => {
       const selfClosingRegex = new RegExp(`<${tag}\\s*\\/>`, "g");
 
       processedContent = processedContent.replace(selfClosingRegex, (match) => {
-        const placeholder = `__HTML_${tag}_${randomBytes(4).toString("hex")}__`;
+        const placeholder = `__HTML_${tag}_${Math.random().toString(36).substring(2)}__`;
         placeholders[placeholder] = createElement(component, { key: placeholder });
         return placeholder;
       });
@@ -320,7 +319,7 @@ const parseHtmlTags = (content: string): ReactNode[] => {
       const tagRegex = new RegExp(`<${tag}>(.*?)<\\/${tag}>`, "gs");
 
       processedContent = processedContent.replace(tagRegex, (match, content) => {
-        const placeholder = `__HTML_${tag}_${randomBytes(4).toString("hex")}__`;
+        const placeholder = `__HTML_${tag}_${Math.random().toString(36).substring(2)}__`;
 
         // Process nested tags recursively
         const innerContent = parseHtmlTags(content);
