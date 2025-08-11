@@ -1,4 +1,5 @@
 import { defaultResponderForAppDir } from "app/api/defaultResponderForAppDir";
+import { randomBytes } from "crypto";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
@@ -20,7 +21,7 @@ const checkoutSessionMetadataSchema = z.object({
 });
 
 const generateRandomString = () => {
-  return Math.random().toString(36).substring(2, 10);
+  return randomBytes(4).toString("hex");
 };
 
 async function getHandler(req: NextRequest) {

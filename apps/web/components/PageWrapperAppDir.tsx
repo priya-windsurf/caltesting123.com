@@ -27,6 +27,8 @@ function PageWrapper(props: PageWrapperProps) {
     pageStatus = "403";
   }
 
+  const sanitizedPageStatus = pageStatus.replace(/['"<>&]/g, "");
+
   // On client side don't let nonce creep into DOM
   // It also avoids hydration warning that says that Client has the nonce value but server has "" because browser removes nonce attributes before DOM is built
   // See https://github.com/kentcdodds/nonce-hydration-issues
@@ -47,7 +49,7 @@ function PageWrapper(props: PageWrapperProps) {
             // It is strictly not necessary to disable, but in a future update of react/no-danger this will error.
             // And we don't want it to error here anyways
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: `window.CalComPageStatus = '${pageStatus}'` }}
+            dangerouslySetInnerHTML={{ __html: `window.CalComPageStatus = '${sanitizedPageStatus}'` }}
           />
           {props.requiresLicense ? (
             <LicenseRequired>{props.children}</LicenseRequired>

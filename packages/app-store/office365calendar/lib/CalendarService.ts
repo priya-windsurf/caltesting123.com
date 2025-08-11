@@ -1,4 +1,5 @@
 import type { Calendar as OfficeCalendar, User, Event } from "@microsoft/microsoft-graph-types-beta";
+import { randomBytes } from "crypto";
 import type { DefaultBodyType } from "msw";
 
 import dayjs from "@calcom/dayjs";
@@ -517,7 +518,7 @@ export default class Office365CalendarService implements Calendar {
     maxRetries: number,
     retryCount = 0
   ): Promise<IBatchResponse> => {
-    const getRandomness = () => Number(Math.random().toFixed(3));
+    const getRandomness = () => Number((randomBytes(2).readUInt16BE(0) / 65535).toFixed(3));
     let retryAfterTimeout = 0;
     if (retryCount >= maxRetries) {
       return { responses: settledPromises };
